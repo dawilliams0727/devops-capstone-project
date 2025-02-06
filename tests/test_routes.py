@@ -141,6 +141,28 @@ class TestAccountService(TestCase):
         self.assertEqual(new_account["date_joined"], str(account.date_joined))
 
     def test_account_not_found(self):
-        """Returns 404 Error given an invalid id"""
+        """It should return 404 Error given an invalid id"""
         response = self.client.get(f"{BASE_URL}/0", content_type="application/json")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_get_accounts_list(self):
+        """It shoudl return list of accounts"""
+        # call _createAccounts to create list of accounts
+        accounts = self._create_accounts(10)
+    
+        # make a GET request to /accounts
+        resp = self.client.get(f"{BASE_URL}", content_type="application/json")
+        data = resp.get_json()
+
+        # assert status code 200 OK and that length of list is same as length of accounts
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(data), len(accounts), "Server did not return all accounts")
+        
+        # iterate through each account returned and verify that all of the data matches
+        for (i, this_account) in enumerate(data):
+            self.assertEqual(this_account["name"], accounts[i].name)
+            self.assertEqual(this_account["email"], accounts[i].email)
+            self.assertEqual(this_account["address"], accounts[i].address)
+            self.assertEqual(this_account["phone_number"], accounts[i].phone_number)
+            self.assertEqual(this_account["date_joined"], str(accounts[i].date_joined))
+
