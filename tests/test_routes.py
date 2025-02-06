@@ -212,4 +212,24 @@ class TestAccountService(TestCase):
         # pass None in request body for PUT and assert 400
         resp = self.client.put(f"{BASE_URL}/{account.id}", json=None)
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
-        
+    
+    def test_delete_an_account(self):
+        """Should delete an existing account"""
+        # create an account
+        account = self._create_accounts(1)[0]
+
+        # delete that account
+        resp = self.client.delete(f"{BASE_URL}/{account.id}")
+
+        # assert that item not found and HTTP 204 deleted
+        self.assertEqual(resp.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(self.client.get(f"{BASE_URL}/{account.id}").status_code, status.HTTP_404_NOT_FOUND)
+
+
+    def test_invalid_http_method_rejected(self):
+        """Should not allow HTTP request methods that aren't permitted"""
+        # make a POST request to /
+        resp = self.client.post("/")
+        self.assertEqual(resp.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    
