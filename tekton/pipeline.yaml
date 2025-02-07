@@ -36,6 +36,7 @@ spec:
         value: $(params.branch)
       runAfter:
         - init
+
     - name: lint
       workspaces:
         - name: source
@@ -48,4 +49,18 @@ spec:
         - name: args
           value: ["--count","--max-complexity=10","--max-line-length=127","--statistics"]
       runAfter: 
+        - clone
+
+    - name: tests
+      workspaces:
+        - name: source
+          workspace: pipeline-workspace
+      taskRef:
+        name: nose
+        params:
+          - name: DATABASE_URI
+            value: sqlite:///test.db
+          - name: args
+            value: -v --with-spec --spec-color
+      runAfter:
         - clone
