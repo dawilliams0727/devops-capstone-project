@@ -160,7 +160,7 @@ class TestAccountService(TestCase):
         # assert status code 200 OK and that length of list is same as length of accounts
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         self.assertEqual(len(data), len(accounts), "Server did not return all accounts")
-   
+
         # iterate through each account returned and verify that all of the data matches
         for (i, this_account) in enumerate(data):
             self.assertEqual(this_account["name"], accounts[i].name)
@@ -196,7 +196,7 @@ class TestAccountService(TestCase):
         updated_account = resp.get_json()
         for key in updated_account.keys():
             self.assertEqual(updated_account[key], payload[key])
-   
+
     def test_invalid_account_not_updated(self):
         """Should not update invalid account data"""
         # create a new account using _create
@@ -214,7 +214,7 @@ class TestAccountService(TestCase):
         # pass None in request body for PUT and assert 400
         resp = self.client.put(f"{BASE_URL}/{account.id}", json=None)
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
- 
+
     def test_delete_an_account(self):
         """Should delete an existing account"""
         # create an account
@@ -251,4 +251,3 @@ class TestAccountService(TestCase):
         resp = self.client.get("/", environ_overrides=HTTPS_ENVIRON)
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         self.assertEqual(resp.headers.get('Access-Control-Allow-Origin'), '*')
-
