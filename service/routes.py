@@ -61,7 +61,7 @@ def create_accounts():
 # LIST ALL ACCOUNTS
 ######################################################################
 
-# ... place you code here to LIST accounts ...
+
 @app.route("/accounts", methods=["GET"])
 def list_accounts():
     """
@@ -76,7 +76,7 @@ def list_accounts():
     response = [account.serialize() for account in accounts]
 
     # log the number of accounts being returned in the list
-    app.logger.info(f"Returning a list of {len(response)} accounts") 
+    app.logger.info(f"Returning a list of {len(response)} accounts")
 
     # return the list with a return code of status.HTTP_200_OK
     return jsonify(response), status.HTTP_200_OK
@@ -85,8 +85,8 @@ def list_accounts():
 # READ AN ACCOUNT
 ######################################################################
 
-# ... place you code here to READ an account ...
-@app.route("/accounts/<id>", methods = ["GET"])
+
+@app.route("/accounts/<id>", methods=["GET"])
 def read_account(id):
     """
         Reads an account
@@ -94,14 +94,15 @@ def read_account(id):
     """
     app.logger.info(f"Received request to read Account #{id}")
     account = Account.find(id)
-    if not account: abort(status.HTTP_404_NOT_FOUND, f"Account {id} not found")
+    if not account:
+        abort(status.HTTP_404_NOT_FOUND, f"Account {id} not found")
     return account.serialize(), status.HTTP_200_OK
 
 ######################################################################
 # UPDATE AN EXISTING ACCOUNT
 ######################################################################
 
-# ... place you code here to UPDATE an account ...
+
 @app.route("/accounts/<int:id>", methods=["PUT"])
 def update_account(id):
     """
@@ -114,12 +115,13 @@ def update_account(id):
     # use the Account.find() method to retrieve the account by the account_id
     account = Account.find(id)
     # abort() with a status.HTTP_404_NOT_FOUND if it cannot be found
-    if not account: abort(status.HTTP_404_NOT_FOUND, "Account could not be found")
+    if not account:
+        abort(status.HTTP_404_NOT_FOUND, "Account could not be found")
 
     # call the deserialize() method on the account passing in request.get_json()
     try:
         account.deserialize(request.get_json())
-    except:
+    except KeyError:
         abort(status.HTTP_400_BAD_REQUEST, "Account Data invalid")
 
     # call account.update() to update the account with the new data
@@ -133,7 +135,7 @@ def update_account(id):
 # DELETE AN ACCOUNT
 ######################################################################
 
-# ... place you code here to DELETE an account ...
+
 @app.route("/accounts/<int:id>", methods=["DELETE"])
 def delete_account(id):
     """
