@@ -58,7 +58,7 @@ spec:
       taskRef:
         name: nose
         params:
-          - name: DATABASE_URI
+          - name: database_uri
             value: sqlite:///test.db
           - name: args
             value: -v --with-spec --spec-color
